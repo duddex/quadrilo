@@ -56,15 +56,13 @@ Quadrilo is an early version (0.1.0). It has so far been built and run on Window
 
 ## Licence
 
-The original code in this project is yours to license as you choose. It uses
-**JUCE 8**, which is dual-licensed under AGPLv3 and a commercial licence;
-distributing a binary built with the AGPL option requires releasing the
-corresponding source under the AGPL, while a JUCE commercial licence removes
-that requirement. JUCE is included as the `libs/JUCE` git submodule and built
-from source.
+Quadrilo is free software: you can redistribute it and/or modify it under the
+terms of the GNU General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version. See [`LICENSE`](LICENSE).
 
-The user interface is drawn in code; no third-party artwork, samples or
-trademarks are included.
+Quadrilo uses JUCE under the AGPLv3. See [`NOTICE.md`](NOTICE.md) for all
+copyright notices and third-party licences.
 
 ## Credits
 
