@@ -54,6 +54,18 @@ To use the VST3, copy the `Quadrilo.vst3` folder to `C:\Program Files\Common Fil
 
 Quadrilo is an early version (0.1.0). It has so far been built and run on Windows only.
 
+## Licence
+
+The original code in this project is yours to license as you choose. It uses
+**JUCE 8**, which is dual-licensed under AGPLv3 and a commercial licence;
+distributing a binary built with the AGPL option requires releasing the
+corresponding source under the AGPL, while a JUCE commercial licence removes
+that requirement. JUCE is included as the `libs/JUCE` git submodule and built
+from source.
+
+The user interface is drawn in code; no third-party artwork, samples or
+trademarks are included.
+
 ## Credits
 
 Designed and developed by [duddex](https://github.com/duddex), with the help of the
