@@ -9,7 +9,7 @@ damping filter, volume and pan, and the delay times can be locked to the host te
 ## Features
 
 - Four delay taps, each with its own Delay, Volume, Damp, Pan and Feedback controls
-- Tempo sync: each tap's delay time becomes a note value (1/16 up to 1/1, including dotted notes)
+- Tempo sync: each tap's delay time becomes one of 14 note values (1/32 up to 1/1, including dotted and triplet notes)
 - Wet/Dry mix and bypass
 - Per-tap one-pole low-pass ("Damp") in the feedback path for darker repeats
 - Smoothed parameter changes and interpolated delay reads for click-free automation
@@ -23,10 +23,10 @@ damping filter, volume and pan, and the delay times can be locked to the host te
 | Volume | yes | Level of the tap's output, shown in dB (default -6.02 dB). |
 | Damp | yes | Low-pass amount applied to each repeat. 0 % is bright, higher values are darker. |
 | Pan | yes | Position of the tap in the stereo field (L 100 ... C ... R 100). |
-| Feedback | yes | How much of the tap is fed back into its own delay line (0 to 95 %). |
+| Feedback | yes | How much of the tap is fed back into its own delay line (0 to 99 %). |
 | Sync | no | Locks all delay times to the host tempo (falls back to 120 BPM without a host tempo). |
 | Wet/Dry | no | Crossfade between the dry input (bottom) and the delay taps (top). |
-| Bypass | no | Passes the input through unchanged. |
+| Bypass | no | Smoothly fades the delay taps out, leaving the dry input. |
 
 ## Building
 
@@ -49,6 +49,13 @@ Build output:
 - Standalone: `build/Quadrilo_artefacts/Release/Standalone/Quadrilo.exe`
 
 To use the VST3, copy the `Quadrilo.vst3` folder to `C:\Program Files\Common Files\VST3`.
+
+Run the delay engine tests (they need no plugin host) with:
+
+```powershell
+cmake --build build --config Release --target QuadriloDspTests
+ctest --test-dir build -C Release --output-on-failure
+```
 
 GitHub Actions builds every push. Pushing a `v*` tag creates a release with a
 zip of the VST3, the standalone app and all licence files.

@@ -28,7 +28,8 @@ target_sources(Quadrilo PRIVATE
     Source/PluginProcessor.cpp
     Source/PluginProcessor.h
     Source/PluginEditor.cpp
-    Source/PluginEditor.h)
+    Source/PluginEditor.h
+    Source/dsp/QuadDelay.h)
 
 target_compile_definitions(Quadrilo PUBLIC
     JUCE_WEB_BROWSER=0
@@ -42,3 +43,10 @@ target_link_libraries(Quadrilo PRIVATE
     juce::juce_recommended_config_flags
     juce::juce_recommended_lto_flags
     juce::juce_recommended_warning_flags)
+
+enable_testing()
+
+add_executable(QuadriloDspTests tests/DspTests.cpp)
+target_include_directories(QuadriloDspTests PRIVATE Source)
+target_compile_features(QuadriloDspTests PRIVATE cxx_std_20)
+add_test(NAME QuadriloDspTests COMMAND QuadriloDspTests)

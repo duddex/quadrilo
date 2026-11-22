@@ -4,13 +4,12 @@
 
 #pragma once
 #include <juce_audio_processors/juce_audio_processors.h>
-#include <juce_dsp/juce_dsp.h>
-#include <array>
+#include "dsp/QuadDelay.h"
 
 class QuadriloProcessor : public juce::AudioProcessor
 {
 public:
-    static constexpr int numTaps = 4;
+    static constexpr int numTaps = quadrilo::numTaps;
 
     QuadriloProcessor();
     ~QuadriloProcessor() override = default;
@@ -26,7 +25,7 @@ public:
     const juce::String getName() const override { return "Quadrilo"; }
     bool acceptsMidi() const override { return false; }
     bool producesMidi() const override { return false; }
-    double getTailLengthSeconds() const override { return 4.0; }
+    double getTailLengthSeconds() const override { return 20.0; }
 
     int getNumPrograms() override { return 1; }
     int getCurrentProgram() override { return 0; }
@@ -42,17 +41,8 @@ public:
 private:
     static juce::AudioProcessorValueTreeState::ParameterLayout createLayout();
 
-    struct Tap
-    {
-        std::vector<float> buffer;
-        int writePos = 0;
-        float lowpassState = 0.0f;
-        juce::SmoothedValue<float> feedback, volume, pan, delaySamples;
-    };
-
-    std::array<Tap, numTaps> taps;
-    juce::SmoothedValue<float> mix;
-    double sampleRate = 44100.0;
+    quadrilo::QuadDelay engine;
+    bool needsSnap = true;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (QuadriloProcessor)
 };
