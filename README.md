@@ -33,15 +33,14 @@ damping filter, volume and pan, and the delay times can be locked to the host te
 Requirements: CMake 3.22 or newer and a C++20 compiler (developed with Visual Studio on Windows).
 
 ```powershell
-git clone --recurse-submodules <repository-url>
+git clone <repository-url>
 cd quadrilo-juce
 cmake -S . -B build -G "Visual Studio 17 2022" -A x64
 cmake --build build --config Release --target Quadrilo_VST3 Quadrilo_Standalone
 ```
 
-Adjust the generator name to match your installed Visual Studio version. JUCE is included as a
-git submodule in `libs/JUCE`; if you cloned without `--recurse-submodules`, run
-`git submodule update --init`.
+Adjust the generator name to match your installed Visual Studio version. JUCE 8.0.4 is fetched at configure time with
+CMake FetchContent, so the first configure needs network access.
 
 Build output:
 
