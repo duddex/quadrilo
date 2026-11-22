@@ -35,12 +35,12 @@ juce::AudioProcessorValueTreeState::ParameterLayout QuadriloProcessor::createLay
         p.push_back (std::make_unique<AudioParameterChoice> (ParameterID { "note" + n, 1 }, "Note " + n, syncNames, 3));
         p.push_back (std::make_unique<AudioParameterFloat> (ParameterID { "feedback" + n, 1 }, "Feedback " + n,
                          NormalisableRange<float> (0.0f, 0.95f), 0.35f));
-        p.push_back (std::make_unique<AudioParameterFloat> (ParameterID { "lowpass" + n, 1 }, "LowPass " + n,
-                         NormalisableRange<float> (0.0f, 0.99f), 0.3f));
-        p.push_back (std::make_unique<AudioParameterFloat> (ParameterID { "gain" + n, 1 }, "Gain " + n,
-                         NormalisableRange<float> (0.0f, 1.0f), 0.0f));
+        p.push_back (std::make_unique<AudioParameterFloat> (ParameterID { "damp" + n, 1 }, "Damp " + n,
+                         NormalisableRange<float> (0.0f, 0.99f), 0.0f));
+        p.push_back (std::make_unique<AudioParameterFloat> (ParameterID { "volume" + n, 1 }, "Volume " + n,
+                         NormalisableRange<float> (0.0f, 1.0f), 0.5f));
         p.push_back (std::make_unique<AudioParameterFloat> (ParameterID { "pan" + n, 1 }, "Pan " + n,
-                         NormalisableRange<float> (0.0f, 1.0f), (float) i / (numTaps - 1)));
+                         NormalisableRange<float> (0.0f, 1.0f), 0.5f));
     }
     return { p.begin(), p.end() };
 }
@@ -54,7 +54,7 @@ void QuadriloProcessor::prepareToPlay (double sr, int)
         t.buffer.assign ((size_t) size, 0.0f);
         t.writePos = 0;
         t.lowpassState = 0.0f;
-        for (auto* s : { &t.feedback, &t.gain, &t.pan, &t.delaySamples })
+        for (auto* s : { &t.feedback, &t.volume, &t.pan, &t.delaySamples })
             s->reset (sr, 0.05);
     }
     mix.reset (sr, 0.05);
@@ -102,19 +102,19 @@ void QuadriloProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Mi
         seconds = juce::jlimit (0.001f, maxDelaySeconds - 0.01f, seconds);
         t.delaySamples.setTargetValue (seconds * (float) sampleRate);
         t.feedback.setTargetValue (apvts.getRawParameterValue ("feedback" + n)->load());
-        t.gain.setTargetValue (apvts.getRawParameterValue ("gain" + n)->load());
+        t.volume.setTargetValue (apvts.getRawParameterValue ("volume" + n)->load());
         t.pan.setTargetValue (apvts.getRawParameterValue ("pan" + n)->load());
     }
 
     std::array<float, numTaps> lowpass;
     for (int i = 0; i < numTaps; ++i)
-        lowpass[(size_t) i] = apvts.getRawParameterValue ("lowpass" + juce::String (i + 1))->load();
+        lowpass[(size_t) i] = apvts.getRawParameterValue ("damp" + juce::String (i + 1))->load();
 
     for (int s = 0; s < numSamples; ++s)
     {
         const float inL = l[s], inR = r[s];
-        const float wet = mix.getNextValue() * 0.5f;
-        float outL = inL, outR = inR;
+        const float m = mix.getNextValue();
+        float outL = inL * (1.0f - m), outR = inR * (1.0f - m);
 
         for (int i = 0; i < numTaps; ++i)
         {
@@ -122,7 +122,7 @@ void QuadriloProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Mi
             const int size = (int) t.buffer.size();
             const float d = t.delaySamples.getNextValue();
             const float fb = t.feedback.getNextValue();
-            const float g = t.gain.getNextValue();
+            const float vol = t.volume.getNextValue();
             const float p = t.pan.getNextValue();
 
             float readPos = (float) t.writePos - d;
@@ -139,8 +139,8 @@ void QuadriloProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Mi
             t.buffer[(size_t) t.writePos] = 0.5f * (inL + inR) + y * fb;
             t.writePos = (t.writePos + 1) % size;
 
-            outL += g * inL + y * wet * (1.0f - p);
-            outR += g * inR + y * wet * p;
+            outL += y * m * vol * (1.0f - p);
+            outR += y * m * vol * p;
         }
         l[s] = outL;
         r[s] = outR;

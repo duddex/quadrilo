@@ -43,7 +43,7 @@ private:
         std::vector<float> buffer;
         int writePos = 0;
         float lowpassState = 0.0f;
-        juce::SmoothedValue<float> feedback, gain, pan, delaySamples;
+        juce::SmoothedValue<float> feedback, volume, pan, delaySamples;
     };
 
     std::array<Tap, numTaps> taps;
