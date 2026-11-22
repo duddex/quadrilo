@@ -11,13 +11,16 @@ public:
 private:
     using SliderAtt = juce::AudioProcessorValueTreeState::SliderAttachment;
     using ButtonAtt = juce::AudioProcessorValueTreeState::ButtonAttachment;
+    using ComboAtt = juce::AudioProcessorValueTreeState::ComboBoxAttachment;
 
     QuadriloProcessor& processor;
 
     struct TapUI
     {
         juce::Slider delay, feedback, lowpass, gain, pan;
+        juce::ComboBox note;
         std::unique_ptr<SliderAtt> aDelay, aFeedback, aLowpass, aGain, aPan;
+        std::unique_ptr<ComboAtt> aNote;
     };
 
     std::array<TapUI, QuadriloProcessor::numTaps> tapUI;
@@ -28,6 +31,7 @@ private:
     juce::OwnedArray<juce::Label> labels;
 
     void setupKnob (juce::Slider&, const juce::String& caption);
+    void updateSyncVisibility();
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (QuadriloEditor)
 };

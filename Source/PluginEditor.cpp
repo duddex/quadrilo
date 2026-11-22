@@ -18,6 +18,14 @@ QuadriloEditor::QuadriloEditor (QuadriloProcessor& p)
         t.aLowpass  = std::make_unique<SliderAtt> (s, "lowpass" + n, t.lowpass);
         t.aGain     = std::make_unique<SliderAtt> (s, "gain" + n, t.gain);
         t.aPan      = std::make_unique<SliderAtt> (s, "pan" + n, t.pan);
+
+        if (auto* choice = dynamic_cast<juce::AudioParameterChoice*> (s.getParameter ("note" + n)))
+            t.note.addItemList (choice->choices, 1);
+        addChildComponent (t.note);
+        auto* noteLabel = labels.add (new juce::Label ({}, "Note"));
+        noteLabel->setJustificationType (juce::Justification::centred);
+        noteLabel->attachToComponent (&t.note, false);
+        t.aNote = std::make_unique<ComboAtt> (s, "note" + n, t.note);
     }
     setupKnob (mix, "Mix");
     aMix = std::make_unique<SliderAtt> (s, "mix", mix);
@@ -25,7 +33,19 @@ QuadriloEditor::QuadriloEditor (QuadriloProcessor& p)
     addAndMakeVisible (bypass);
     aSync = std::make_unique<ButtonAtt> (s, "sync", sync);
     aBypass = std::make_unique<ButtonAtt> (s, "bypass", bypass);
+    sync.onStateChange = [this] { updateSyncVisibility(); };
+    updateSyncVisibility();
     setSize (620, 420);
+}
+
+void QuadriloEditor::updateSyncVisibility()
+{
+    const bool synced = sync.getToggleState();
+    for (auto& t : tapUI)
+    {
+        t.delay.setVisible (! synced);
+        t.note.setVisible (synced);
+    }
 }
 
 void QuadriloEditor::setupKnob (juce::Slider& k, const juce::String& caption)
@@ -65,7 +85,10 @@ void QuadriloEditor::resized()
         auto row = area.removeFromTop (rowH);
         row.removeFromLeft (50);
         const int w = row.getWidth() / 5;
-        for (auto* k : { &t.delay, &t.feedback, &t.lowpass, &t.gain, &t.pan })
+        auto delayArea = row.removeFromLeft (w).withTrimmedTop (16).reduced (2);
+        t.delay.setBounds (delayArea);
+        t.note.setBounds (delayArea.withSizeKeepingCentre (delayArea.getWidth(), 26));
+        for (auto* k : { &t.feedback, &t.lowpass, &t.gain, &t.pan })
             k->setBounds (row.removeFromLeft (w).withTrimmedTop (16).reduced (2));
     }
 }
