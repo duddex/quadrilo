@@ -30,17 +30,17 @@ damping filter, volume and pan, and the delay times can be locked to the host te
 
 ## Building
 
-Requirements: CMake 3.22 or newer and a C++20 compiler (developed with Visual Studio on Windows).
+Requirements: CMake 3.22 or newer and a C++20 compiler (developed with Visual
+Studio 2026 on Windows). JUCE 9.0.5 is fetched with CMake FetchContent, so the
+first configure needs network access.
 
 ```powershell
-git clone <repository-url>
-cd quadrilo-juce
-cmake -S . -B build -G "Visual Studio 17 2022" -A x64
-cmake --build build --config Release --target Quadrilo_VST3 Quadrilo_Standalone
+git clone https://github.com/duddex/quadrilo.git
+cd quadrilo
+cmake -S . -B build
+cmake --build build --config Release
+ctest --test-dir build -C Release --output-on-failure
 ```
-
-Adjust the generator name to match your installed Visual Studio version. JUCE 9.0.5 is fetched at configure time with
-CMake FetchContent, so the first configure needs network access.
 
 Build output:
 
@@ -49,15 +49,12 @@ Build output:
 
 To use the VST3, copy the `Quadrilo.vst3` folder to `C:\Program Files\Common Files\VST3`.
 
-Run the delay engine tests (they need no plugin host) with:
+The delay engine tests need no plugin host; `ctest` runs them.
 
-```powershell
-cmake --build build --config Release --target QuadriloDspTests
-ctest --test-dir build -C Release --output-on-failure
-```
+## Releases
 
-GitHub Actions builds every push. Pushing a `v*` tag creates a release with a
-zip of the VST3, the standalone app and all licence files.
+GitHub Actions builds and tests every push on Windows. Pushing a `v*` tag creates a release with a
+zip of the VST3, the standalone app and the licence files.
 
 ## Status
 
