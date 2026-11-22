@@ -72,6 +72,5 @@ copyright notices and third-party licences.
 
 ## Credits
 
-Designed and developed by [duddex](https://github.com/duddex), with the help of the
-[OpenCode](https://opencode.ai) coding harness and Anthropic's Claude Sonnet 5.5.
-Built on the [JUCE](https://juce.com) framework.
+Designed and developed by [duddex](https://github.com/duddex) with the help of a
+large language model (LLM). Built on the [JUCE](https://juce.com) framework.
