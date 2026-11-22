@@ -61,7 +61,7 @@ zip of the VST3, the standalone app and all licence files.
 
 ## Status
 
-Quadrilo is an early version (0.1.0). It has so far been built and run on Windows only.
+Quadrilo is an early version (0.1.1). It has so far been built and run on Windows only.
 
 ## Licence
 
