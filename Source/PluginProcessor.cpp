@@ -5,6 +5,20 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
+namespace
+{
+// Reports exactly 0 or 1 from getValue(). The state tree stores the snapped value,
+// so an unsnapped value (such as 0.53 set by a host or by pluginval) would
+// otherwise never be reset when the state is restored.
+class SnappingBoolParameter : public juce::AudioParameterBool
+{
+public:
+    using juce::AudioParameterBool::AudioParameterBool;
+
+    float getValue() const override { return get() ? 1.0f : 0.0f; }
+};
+} // namespace
+
 QuadriloProcessor::QuadriloProcessor()
     : AudioProcessor (BusesProperties()
                           .withInput  ("Input",  juce::AudioChannelSet::stereo(), true)
@@ -22,8 +36,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout QuadriloProcessor::createLay
     for (auto* n : quadrilo::noteNames)
         noteNames.add (n);
 
-    p.push_back (std::make_unique<AudioParameterBool> (ParameterID { "sync", 1 }, "Tempo Sync", false));
-    p.push_back (std::make_unique<AudioParameterBool> (ParameterID { "bypass", 1 }, "Bypass", false));
+    p.push_back (std::make_unique<SnappingBoolParameter> (ParameterID { "sync", 1 }, "Tempo Sync", false));
+    p.push_back (std::make_unique<SnappingBoolParameter> (ParameterID { "bypass", 1 }, "Bypass", false));
     p.push_back (std::make_unique<AudioParameterFloat> (ParameterID { "mix", 1 }, "Mix",
                                                          NormalisableRange<float> (0.0f, 1.0f), 0.5f));
 
