@@ -39,7 +39,7 @@ cmake -S . -B build -G "Visual Studio 17 2022" -A x64
 cmake --build build --config Release --target Quadrilo_VST3 Quadrilo_Standalone
 ```
 
-Adjust the generator name to match your installed Visual Studio version. JUCE 8.0.4 is fetched at configure time with
+Adjust the generator name to match your installed Visual Studio version. JUCE 9.0.5 is fetched at configure time with
 CMake FetchContent, so the first configure needs network access.
 
 Build output:
@@ -61,7 +61,7 @@ zip of the VST3, the standalone app and all licence files.
 
 ## Status
 
-Quadrilo is an early version (0.1.1). It has so far been built and run on Windows only.
+Quadrilo is an early version (0.1.2). It has so far been built and run on Windows only.
 
 ## Licence
 

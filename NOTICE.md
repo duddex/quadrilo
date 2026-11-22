@@ -12,7 +12,7 @@ graphics from other plugins are included.
 ## JUCE
 
 Quadrilo is built with the [JUCE framework](https://juce.com), included as a
-fetched with CMake FetchContent (tag 8.0.4). Quadrilo uses JUCE under the
+fetched with CMake FetchContent (tag 9.0.5). Quadrilo uses JUCE under the
 **GNU Affero General Public License v3.0** (one of JUCE's two licence options).
 See [`licenses/AGPL-3.0.txt`](licenses/AGPL-3.0.txt) and `LICENSE.md` in the JUCE sources.
 
@@ -30,7 +30,7 @@ JUCE bundles more third-party software, listed in `JUCE.spdx.json` in the JUCE s
 
 The VST3 plugin is built with the Steinberg VST3 SDK, which JUCE bundles and
 which is licensed under the MIT licence. See
-`modules/juce_audio_processors/format_types/VST3_SDK/` in the JUCE
+`modules/juce_audio_processors_headless/format_types/VST3_SDK/` in the JUCE
 sources for its licence text.
 
 VST is a registered trademark of Steinberg Media Technologies GmbH.
