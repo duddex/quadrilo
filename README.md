@@ -50,6 +50,9 @@ Build output:
 
 To use the VST3, copy the `Quadrilo.vst3` folder to `C:\Program Files\Common Files\VST3`.
 
+GitHub Actions builds every push. Pushing a `v*` tag creates a release with a
+zip of the VST3, the standalone app and all licence files.
+
 ## Status
 
 Quadrilo is an early version (0.1.0). It has so far been built and run on Windows only.

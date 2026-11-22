@@ -1,3 +1,7 @@
+// Quadrilo - four-tap stereo delay
+// Copyright (C) 2026 duddex
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 #pragma once
 #include "PluginProcessor.h"
 
